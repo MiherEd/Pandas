@@ -3850,10 +3850,12 @@ void script_free_state(struct script_state* st)
 #endif // Pandas_ScriptEngine_MutliStackBackup
 
 		if (sd && sd->st == st) { // Current script is aborted.
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 			if(sd->state.using_fake_npc) {
 				clif_clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 				sd->state.using_fake_npc = 0;
 			}
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 
 #ifdef Pandas_Fix_Progressbar_Abort_Stuck
 			// 若当前角色的 progressbar 信息里记录的来源 NPC 编号等于即将销毁的 st 的 NPC 编号,
@@ -4528,10 +4530,12 @@ static void script_detach_state(struct script_state* st, bool dequeue_event)
 	struct map_session_data* sd;
 
 	if(st->rid && (sd = map_id2sd(st->rid))!=NULL) {
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 		if( sd->state.using_fake_npc ){
 			clif_clearunit_single( sd->npc_id, CLR_OUTSIGHT, sd->fd );
 			sd->state.using_fake_npc = 0;
 		}
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 
 		sd->st = st->bk_st;
 		sd->npc_id = st->bk_npcid;
@@ -4780,10 +4784,12 @@ void run_script_main(struct script_state *st)
 		//Dispose of script.
 		if ((sd = map_id2sd(st->rid))!=NULL)
 		{	//Restore previous stack and save char.
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 			if(sd->state.using_fake_npc){
 				clif_clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 				sd->state.using_fake_npc = 0;
 			}
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 			//Restore previous script if any.
 			script_detach_state(st, true);
 			if (sd->vars_dirty)
@@ -28264,10 +28270,6 @@ BUILDIN_FUNC(selfdeletion) {
 
 	TBL_NPC* nd = map_id2nd(st->oid);
 	bool immediately = (option == SELFDEL_NOW);
-
-	if (sd && sd->state.using_fake_npc) {
-		return SCRIPT_CMD_SUCCESS;
-	}
 
 	if (nd->bl.id == fake_nd->bl.id) {
 		return SCRIPT_CMD_SUCCESS;

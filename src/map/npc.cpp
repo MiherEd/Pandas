@@ -609,10 +609,12 @@ int npc_event_dequeue(struct map_session_data* sd,bool free_script_stack)
 
 	if(sd->npc_id)
 	{	//Current script is aborted.
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 		if(sd->state.using_fake_npc){
 			clif_clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
 		}
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 		if (free_script_stack&&sd->st) {
 			script_free_state(sd->st);
 			sd->st = NULL;
@@ -1595,8 +1597,10 @@ struct npc_data* npc_checknear(struct map_session_data* sd, struct block_list* b
 	if(bl->type != BL_NPC) return NULL;
 	nd = (TBL_NPC*)bl;
 
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 	if(sd->state.using_fake_npc && sd->npc_id == bl->id)
 		return nd;
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 
 	if (nd->class_<0) //Class-less npc, enable click from anywhere.
 		return nd;

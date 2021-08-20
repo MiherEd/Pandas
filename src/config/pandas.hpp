@@ -1176,6 +1176,14 @@
 	//
 	// 所以熊猫表示, 我们也干脆删了吧!! Oh yeah!
 	#define Pandas_Cleanup_Useless_SQL_Global_Configure
+
+	// 屏蔽掉使用 input 和 select / menu 指令时发送 fake npc 的机制 [Sola丶小克]
+	// 该机制从 2006 年提交, 到 2008 年至今基本没有太大的改动
+	// 至于为什么要在使用 input 和 select / menu 指令时在玩家站立的位置构造一个 fake npc 原因未明
+	// 将他屏蔽掉之后能解决以下几个问题:
+	// - 使用 input 和 select / menu 指令时鼠标移动到角色上会发现有 NPC 对话气泡
+	// - 在菜单项处理过程中使用 detachrid 会导致与下一个 NPC 对话时, 对话的 NPC 从玩家视野中消失
+	#define Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 #endif // Pandas_Cleanup
 
 // ============================================================================

@@ -346,7 +346,9 @@ struct map_session_data {
 		unsigned int deal_locked :2; //1: Clicked on OK. 2: Clicked on TRADE
 		unsigned int size :2; // for tiny/large types
 		unsigned int night :1; //Holds whether or not the player currently has the SI_NIGHT effect on. [Skotlex]
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 		unsigned int using_fake_npc :1;
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 		unsigned int rewarp :1; //Signals that a player should warp as soon as he is done loading a map. [Skotlex]
 		unsigned int killer : 1;
 		unsigned int killable : 1;

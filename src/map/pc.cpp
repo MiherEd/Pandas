@@ -8737,10 +8737,12 @@ void pc_close_npc(struct map_session_data *sd,int flag)
 	nullpo_retv(sd);
 
 	if (sd->npc_id || sd->npc_shopid) {
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 		if (sd->state.using_fake_npc) {
 			clif_clearunit_single(sd->npc_id, CLR_OUTSIGHT, sd->fd);
 			sd->state.using_fake_npc = 0;
 		}
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 
 		if (sd->st) {
 			if(sd->st->state == RUN){ //wait ending code execution

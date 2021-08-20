@@ -2616,6 +2616,7 @@ void clif_scriptclear(struct map_session_data *sd, int npcid)
 /*==========================================
  *
  *------------------------------------------*/
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 void clif_sendfakenpc(struct map_session_data *sd, int npcid) {
 	unsigned char *buf;
 	int fd = sd->fd;
@@ -2636,7 +2637,7 @@ void clif_sendfakenpc(struct map_session_data *sd, int npcid) {
 	WBUFB(buf,50)=5;
 	WFIFOSET(fd, packet_len(0x78));
 }
-
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 
 /// Displays an NPC dialog menu (ZC_MENU_LIST).
 /// 00b7 <packet len>.W <npc id>.L <menu items>.?B
@@ -2664,10 +2665,12 @@ void clif_scriptmenu(struct map_session_data* sd, int npcid, const char* mes)
 	int slen = strlen(mes) + 9;
 	struct block_list *bl = NULL;
 
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 	if (!sd->state.using_fake_npc && (npcid == fake_nd->bl.id || ((bl = map_id2bl(npcid)) && (bl->m!=sd->bl.m ||
 	   bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 	   bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 	   clif_sendfakenpc(sd, npcid);
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 
 	WFIFOHEAD(fd, slen);
 	WFIFOW(fd,0)=0xb7;
@@ -2696,10 +2699,12 @@ void clif_scriptinput(struct map_session_data *sd, int npcid)
 
 	nullpo_retv(sd);
 
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 	if (!sd->state.using_fake_npc && (npcid == fake_nd->bl.id || ((bl = map_id2bl(npcid)) && (bl->m!=sd->bl.m ||
 	   bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 	   bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 	   clif_sendfakenpc(sd, npcid);
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 
 	fd=sd->fd;
 	WFIFOHEAD(fd, packet_len(0x142));
@@ -2727,10 +2732,12 @@ void clif_scriptinputstr(struct map_session_data *sd, int npcid)
 
 	nullpo_retv(sd);
 
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 	if (!sd->state.using_fake_npc && (npcid == fake_nd->bl.id || ((bl = map_id2bl(npcid)) && (bl->m!=sd->bl.m ||
 	   bl->x<sd->bl.x-AREA_SIZE-1 || bl->x>sd->bl.x+AREA_SIZE+1 ||
 	   bl->y<sd->bl.y-AREA_SIZE-1 || bl->y>sd->bl.y+AREA_SIZE+1))))
 	   clif_sendfakenpc(sd, npcid);
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 
 	fd=sd->fd;
 	WFIFOHEAD(fd, packet_len(0x1d4));
@@ -11493,7 +11500,9 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		clif_updatestatus(sd,SP_LUK);
 
 		// abort currently running script
+#ifndef Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 		sd->state.using_fake_npc = 0;
+#endif // Pandas_Cleanup_Using_Fake_NPC_For_Input_Or_Menu
 		sd->state.menu_or_input = 0;
 		sd->npc_menu = 0;
 
